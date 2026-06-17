@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSMQ Prep Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #1a1a2e;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #00ff88;
+        }
+
+        .header h1 {
+            color: #00ff88;
+            font-size: 24px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 15px;
+            border-radius: 10px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .user-message {
+            background: #1a1a2e;
+            border: 1px solid #00ff88;
+            align-self: flex-end;
+            color: #00ff88;
+        }
+
+        .ai-message {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            align-self: flex-start;
+            color: #ffffff;
+        }
+
+        .input-area {
+            padding: 20px;
+            background: #1a1a2e;
+            border-top: 2px solid #00ff88;
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #00ff88;
+            background: #0a0a0a;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #555;
+        }
+
+        button {
+            padding: 15px 30px;
+            background: #00ff88;
+            color: #0a0a0a;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #00cc66;
+        }
+
+        button:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .thinking {
+            color: #888;
+            font-style: italic;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>NSMQ Prep Hub</h1>
+    <p>AI Powered by Your Question Bank</p>
+</div>
+
+<div class="chat-box" id="chatBox">
+    <div class="message ai-message">
+        Hello! I am your NSMQ AI assistant. Ask me any Science or Maths question!
+    </div>
+</div>
+
+<div class="input-area">
+    <input 
+        type="text" 
+        id="questionInput" 
+        placeholder="Ask an NSMQ question..."
+        onkeypress="if(event.key==='Enter') askQuestion()"
+    />
+    <button id="askBtn" onclick="askQuestion()">Ask</button>
+</div>
+
+<script>
+    async function askQuestion() {
+        const input = document.getElementById("questionInput");
+        const chatBox = document.getElementById("chatBox");
+        const btn = document.getElementById("askBtn");
+        const question = input.value.trim();
+
+        if (!question) return;
+
+        // Show user message
+        chatBox.innerHTML += `
+            <div class="message user-message">${question}</div>
+        `;
+
+        input.value = "";
+        btn.disabled = true;
+
+        // Show thinking
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "message ai-message thinking";
+        aiDiv.textContent = "Thinking...";
+        chatBox.appendChild(aiDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Stream response
+        const response = await fetch("/ask", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question })
+        });
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        aiDiv.className = "message ai-message";
+        aiDiv.textContent = "";
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            aiDiv.textContent += decoder.decode(value);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        btn.disabled = false;
+        input.focus();
+    }
+</script>
+
+</body>
+</html>
