@@ -65,7 +65,24 @@ export function drawLossChart(train, val) {
   // The two lines. "points" is a list like "10,20 30,40 ..."
   const toPoints = list => list.map(p => `${x(p.step).toFixed(1)},${y(p.loss).toFixed(1)}`).join(' ');
   if (val.length)   svg.append(svgEl('polyline', { points: toPoints(val),   class: 'line-val' }));
-  if (train.length) svg.append(svgEl('polyline', { points: toPoints(train), class: 'line-train' }));
+  if (train.length) {
+    // A soft colour fade under the training line. The gradient is defined once,
+    // then the shaded area is the line plus two corners down to the x axis.
+    const defs = svgEl('defs');
+    const fade = svgEl('linearGradient', { id: 'train-fill', x1: 0, y1: 0, x2: 0, y2: 1 });
+    fade.append(svgEl('stop', { offset: '0%', class: 'stop-top' }), svgEl('stop', { offset: '100%', class: 'stop-bottom' }));
+    defs.append(fade);
+    svg.append(defs);
+
+    const base = PAD.top + plotH;
+    const areaPoints = `${x(train[0].step)},${base} ${toPoints(train)} ${x(train[train.length - 1].step)},${base}`;
+    svg.append(svgEl('polygon', { points: areaPoints, class: 'area' }));
+    svg.append(svgEl('polyline', { points: toPoints(train), class: 'line-train' }));
+
+    // A dot marking where training is right now.
+    const end = train[train.length - 1];
+    svg.append(svgEl('circle', { cx: x(end.step), cy: y(end.loss), r: 5.5, class: 'end-dot' }));
+  }
 
   // A plain-words description for screen readers.
   const last = train[train.length - 1];

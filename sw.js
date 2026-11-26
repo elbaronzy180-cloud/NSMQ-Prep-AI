@@ -7,7 +7,7 @@
 // It deliberately NEVER touches requests to other websites, so your metrics
 // file and backend answers (and your token) are never stored by it.
 
-const CACHE = 'model-lab-v1';   // change this number whenever you edit the app, so phones fetch the new files
+const CACHE = 'model-lab-v2';   // change this number whenever you edit the app, so phones fetch the new files
 
 const APP_FILES = [
   './', 'index.html', 'manifest.webmanifest',

@@ -38,7 +38,9 @@ function render(root) {
   const chartBox = h('div');
   const sampleBox = h('div', { class: 'sample-text' }, 'Waiting for the first sample…');
 
-  const stat = (label, valueEl) => h('div', { class: 'stat' }, h('div', { class: 'label' }, label), valueEl);
+  // One small tile: a label (with an optional coloured dot matching the graph) and a big number.
+  const stat = (label, valueEl, dotClass) => h('div', { class: 'stat' },
+    h('div', { class: 'label' }, dotClass ? h('span', { class: `dot ${dotClass}` }) : null, label), valueEl);
 
   root.append(
     h('h1', {}, 'Training'),
@@ -48,8 +50,8 @@ function render(root) {
       h('div', { class: 'row' }, badge, updated),
       h('div', { class: 'stats' },
         stat('Current step', stepValue),
-        stat('Training loss', trainValue),
-        stat('Validation loss', valValue),
+        stat('Training loss', trainValue, 'dot-train'),
+        stat('Validation loss', valValue, 'dot-val'),
       ),
       h('div', { class: 'progress', role: 'progressbar', 'aria-label': 'Training progress' }, progressBar),
     ),

@@ -52,8 +52,8 @@ function render(root) {
   root.append(
     h('h1', {}, 'Learn'),
     h('p', { class: 'page-intro' }, 'Four ideas that explain almost everything on the Training page.'),
-    ...LESSONS.map(lesson => h('section', { class: 'card lesson' },
-      h('h2', {}, lesson.title),
+    ...LESSONS.map((lesson, i) => h('section', { class: 'card lesson' },
+      h('h2', {}, h('span', { class: 'lesson-num' }, String(i + 1)), lesson.title),
       ...lesson.body.map(text => h('p', {}, text)),
       h('p', { class: 'example' }, h('b', {}, 'Example: '), ...lesson.example),
     )),
