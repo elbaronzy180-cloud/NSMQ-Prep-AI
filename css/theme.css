@@ -1,0 +1,76 @@
+/* Colours live here as "variables", so light and dark mode only need
+   to change this one file. layout.css uses them with var(--name).
+
+   Three situations:
+   1. Default            -> light colours
+   2. Phone is in dark   -> dark colours (unless you forced light)
+   3. You pressed ◐      -> data-theme="light" or "dark" is set on <html>
+*/
+
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef0f7;
+  --text: #1b1d2a;
+  --text-soft: #5b6075;
+  --border: #dde0ec;
+  --accent: #4f46e5;
+  --accent-text: #ffffff;
+  --train: #4f46e5;   /* training loss line */
+  --val: #c2410c;     /* validation loss line */
+  --warn-bg: #fff4e0;
+  --warn-text: #7a4a00;
+  --bad-bg: #fde8e8;
+  --bad-text: #8f1d1d;
+  --ok-bg: #e3f6ea;
+  --ok-text: #14532d;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(20, 24, 50, .06), 0 4px 14px rgba(20, 24, 50, .05);
+  color-scheme: light;
+}
+
+/* Dark colours, used by both the automatic and the manual switch. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11121a;
+    --surface: #1b1d2a;
+    --surface-2: #252838;
+    --text: #eceefa;
+    --text-soft: #a3a8c0;
+    --border: #2f3347;
+    --accent: #8b87ff;
+    --accent-text: #11121a;
+    --train: #8b87ff;
+    --val: #ffa24d;
+    --warn-bg: #3a2c10;
+    --warn-text: #ffd699;
+    --bad-bg: #3d1a1a;
+    --bad-text: #ffb4b4;
+    --ok-bg: #16301f;
+    --ok-text: #a7f0c0;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+
+/* Same dark colours, for when you pressed the ◐ button to choose dark. */
+:root[data-theme="dark"] {
+  --bg: #11121a;
+  --surface: #1b1d2a;
+  --surface-2: #252838;
+  --text: #eceefa;
+  --text-soft: #a3a8c0;
+  --border: #2f3347;
+  --accent: #8b87ff;
+  --accent-text: #11121a;
+  --train: #8b87ff;
+  --val: #ffa24d;
+  --warn-bg: #3a2c10;
+  --warn-text: #ffd699;
+  --bad-bg: #3d1a1a;
+  --bad-text: #ffb4b4;
+  --ok-bg: #16301f;
+  --ok-text: #a7f0c0;
+  --shadow: none;
+  color-scheme: dark;
+}

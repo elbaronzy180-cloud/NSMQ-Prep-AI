@@ -1,0 +1,16 @@
+{
+  "step": 1200,
+  "max_steps": 5000,
+  "train_loss": [
+    { "step": 100, "loss": 4.62 },
+    { "step": 400, "loss": 3.71 },
+    { "step": 800, "loss": 2.98 },
+    { "step": 1200, "loss": 2.51 }
+  ],
+  "val_loss": [
+    { "step": 200, "loss": 4.41 },
+    { "step": 600, "loss": 3.40 },
+    { "step": 1200, "loss": 2.66 }
+  ],
+  "sample": "The old king walked to the sea and said that the town was quiet."
+}
